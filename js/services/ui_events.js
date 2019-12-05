@@ -1,29 +1,4 @@
-app.factory('ui_events', ["$filter","ui_graph_api", function ($filter, ui_graph_api) {
-
-    var timeFromUTCDateHHMM = function(dateObj)
-    {
-        var utcDate = new Date(dateObj);
-        var convertedTime;
-        convertedTime = $filter('date')(utcDate, "hh:mm");
-        console.log("processTime:: UTC Date:: "+utcDate+" :: Converted Date::"+ convertedTime);
-        return convertedTime;
-    };
-    var timeFromUTCDateHHMMSS = function(dateObj)
-    {
-        var utcDate = new Date(dateObj);
-        var convertedTime;
-        convertedTime = $filter('date')(utcDate, "HH:mm:ss");
-        console.log("processTime:: UTC Date:: "+utcDate+" :: Converted Date::"+ convertedTime);
-        return convertedTime;
-    };
-
-    var _setUIControls_induceGraphWithHops = function(network, params) {
-
-        var endpoint = ui_graph_api.endpoints.induceGraphWithHops;
-        ui_graph_api.callAPI(network, endpoint, params);
-        // TODO: need to set physics = True after new graph is drawn...
-        network.setOptions({ physics: true })
-    };
+app.factory('ui_events', ["$http","ui_graph_api", function ($http, ui_graph_api) {
 
     var _setUIControls_genericAPI = function (network, endpoint, params) {
 
@@ -33,9 +8,32 @@ app.factory('ui_events', ["$filter","ui_graph_api", function ($filter, ui_graph_
       
     };
 
-    var ui_actions = {
+    var _setUIControls_downloadModal = function(ctx) {
+        // open image in a separate window, to do in the modal
+         // var ctx = $scope.ctrlnetworks.canvas.getContext();
+         var dataURL = ctx.canvas.toDataURL();
+         window.open(dataURL);
+         var config = { responseType: 'blob' };
 
-    _nodeDoubleClickAction: function(networkViewInfo, nodeIDList, params) {
+    //download 
+      $http.get(dataURL, config)
+        .then(function(result) {
+            
+          var anchor = angular.element('<a/>');
+          var blob = new Blob([result.data], {type: "image/png"});
+          anchor.attr({
+            href: window.URL.createObjectURL(blob),
+            target: '_blank',
+            download: 'networkgraph.png'
+          })[0].click();
+        })
+    };
+
+    var ui_actions = {
+        // double or single click
+        // drag and drop
+
+    _nodeDoubleClickAction: function(network, params) {
         // double click of a node is used to explode the node
 
         // var curr_node_pos_dict = JSON.stringify(network.getPositions());
@@ -62,15 +60,15 @@ app.factory('ui_events', ["$filter","ui_graph_api", function ($filter, ui_graph_
         if (nodeID) {
             var endpoint = ui_graph_api.endpoints.explodeNodes;
 
-            // ui_graph_api.callAPI(network,
-            //     endpoint, { node_id_list: explode_node_list, clicked_node_coords: params.pointer.canvas }
-            // );
+            ui_graph_api.callAPI(network,
+                endpoint, { node_id_list: explode_node_list, clicked_node_coords: params.pointer.canvas }
+            );
 
-        var promise = ui_api_call.api.callApi(endpoint, 
-            networkViewInfo, nodeIDList, 
-            { node_id_list: explode_node_list, clicked_node_coords: params.pointer.canvas });
+        // var promise = ui_api_call.api.callApi(endpoint, 
+        //     networkViewInfo, nodeIDList, 
+        //     { node_id_list: explode_node_list, clicked_node_coords: params.pointer.canvas });
 
-        return promise;
+        // return promise;
         }
     },
 
@@ -207,9 +205,7 @@ app.factory('ui_events', ["$filter","ui_graph_api", function ($filter, ui_graph_
     }; //ui_actions ends
 
     return {
-        timeFromUTCDateHHMM : timeFromUTCDateHHMM,
-        timeFromUTCDateHHMMSS: timeFromUTCDateHHMMSS,
-        _setUIControls_induceGraphWithHops: _setUIControls_induceGraphWithHops,
+        _setUIControls_downloadModal: _setUIControls_downloadModal,
         ui_actions: ui_actions
     };
 }])

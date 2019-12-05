@@ -22,7 +22,8 @@ angular.module('ngVis', [])
                 options: '=',
                 events: '=',
                 control: '=',
-                outnetworks: '='
+                outnetworks: '=',
+                ctrlparams: '='
             },
             
             replace: true,
@@ -67,21 +68,8 @@ angular.module('ngVis', [])
 
                     scope.network = new vis.Network(element[0], scope.data, scope.options);
 
-                    scope.network.controlParams = {
-                        'dragMode': false,
-                        'dragInProgress': false,
-                        'dragCoords': {'x1':0, 'y1':0, 'x2':0, 'y2': 0},
-                        // 'showCommunities': true
-                        'colorTheme': 'colTheme_default',
-                        'splitCurrencies': false,
-                        'focal_items': { 
-                            'node_list':[],
-                            'edge_list':[],
-                            're_list':[],
-                            'ure_list':[],
-                            'trxn_list':[]
-                        }
-                    }
+                    // TO DO: put controlParams elsewhere 
+                    scope.network.controlParams = scope.ctrlparams || null;
 
                     // EVENTS
                     var networkEvents = [
@@ -126,7 +114,7 @@ angular.module('ngVis', [])
                             'curr_viewPos': scope.network.getViewPosition()
                     };
 
-                    scope.control = scope.networkViewInfo;
+                    // scope.control = scope.networkViewInfo;
 
 
 
@@ -145,7 +133,7 @@ angular.module('ngVis', [])
                     }
 
 
-                    console.log('********* new graph from vis', scope.network, 'with data: ', scope.data);
+                    console.log('********* new graph from vis', scope.network, 'with data: ', scope.data, ', with options: ', scope.options);
                     
 
                     var endpoint = ui_graph_api.endpoints.initGraph;

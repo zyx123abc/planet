@@ -1,1 +1,1 @@
-var app = angular.module('app',['ngVis','angular.chips','ui.bootstrap']);
+var app = angular.module('app',['ngVis','angular.chips','ngAnimate', 'ngSanitize', 'ui.bootstrap']);

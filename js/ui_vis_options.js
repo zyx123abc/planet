@@ -6,7 +6,7 @@ var default_graph_options = {
     //     showButton: false
     // },
     "autoResize": true,
-    "height": '800',
+    "height": '450',
     "width": '100%',
 
     "edges": {
@@ -128,3 +128,53 @@ var default_graph_options = {
         tooltipDelay: 200
     }
 };
+
+var ure_network_options = {
+                "physics": {
+                    enabled: true,
+                    solver: 'repulsion',
+                    minVelocity: 0.30,
+                    stabilization: {
+                        enabled: false,
+                        onlyDynamicEdges: true
+                    },
+                    adaptiveTimestep: true,
+                    repulsion: {
+                        centralGravity: 0.005,
+                    },
+                    barnesHut: {
+                        centralGravity: 0,
+                        springConstant: 0.04,
+                        springLength: 100,
+                        avoidOverlap: 0
+                    }
+                },
+                "nodes": {
+                    shapeProperties: {
+                        interpolation: true
+                    },
+                    shape: 'dot', // TODO: use shapes for particular nodes...
+                    fixed: false,
+                },
+                "edges": {
+                    smooth: { forceDirection: "none", type: "dynamic", roundness: 0.5 },
+                    arrows: { to: { enabled: true } },
+                    color: { inherit: 'both' }
+                }
+        };
+
+var re_controlParams = {
+                        'dragMode': false,
+                        'dragInProgress': false,
+                        'dragCoords': {'x1':0, 'y1':0, 'x2':0, 'y2': 0},
+                        // 'showCommunities': true
+                        'colorTheme': 'colTheme_default',
+                        'splitCurrencies': false,
+                        'focal_items': { 
+                            'node_list':[],
+                            'edge_list':[],
+                            're_list':[],
+                            'ure_list':[],
+                            'trxn_list':[]
+                        }
+                    }

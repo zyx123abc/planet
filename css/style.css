@@ -1,18 +1,56 @@
-@import url('../assets/googlefont.css');
+/*@import url('../assets/googlefont.css');*/
 @import url('../assets/fontawesome-free-5.9.0-web/css/all.css');
 
-/*.loader-container {
-    position: relative;
+
+html {
+   height: 100%;
 }
 
+/* to do: change google fonts offline*/
+body {
+    margin: 10px;
+    /*font-family: 'Poppins', sans-serif;*/
+    background: #424242;
+    height: 100%;
+    /*font-family: 'Open Sans', sans-serif;*/
+    line-height: 1.75em;
+    font-size: 16px;
+}
+
+canvas {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  outline: none;
+  -webkit-tap-highlight-color:rgba(255,255,255,0);
+}
+
+p {
+    /*font-family: 'Poppins', sans-serif;*/
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+
+
+.loader-container {
+    position: relative;
+}
 .loader-container .loader {
     position: absolute;
     right: 50%;
     bottom: 3px
-}*/
+}
 
 .printvalue{
-	margin: 10px;
+  margin: 10px;
 }
 
 
@@ -22,10 +60,11 @@ chip-tmpl {
 }
 
 .default-chip {
-  border: 2px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 5px;
   background: #e0e0e0;
-  padding: 5px; 
+ 
+  padding: 1px; 
 }
 
 chip-tmpl:focus {
@@ -35,6 +74,7 @@ chip-tmpl:focus {
 chip-tmpl:focus .default-chip {
     border: 2px solid #9e9e9e;
     background: #9e9e9e;
+    opacity: 1;
     color: white; 
 }
 
@@ -64,54 +104,21 @@ chips {
 }
 
 
-
-html {
-   height: 100%;
-}
-
-body {
-    margin: 10px;
-    font-family: 'Poppins', sans-serif;
-    background: #424242;
-    height: 100%;
-    /*font-family: 'Open Sans', sans-serif;*/
-    line-height: 1.75em;
-    font-size: 16px;
-}
-
-canvas {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-  outline: none;
-  -webkit-tap-highlight-color:rgba(255,255,255,0);
-}
-
-p {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1.7em;
-    color: #999;
-}
-
-a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
+#focal_chip .default-chip {
+  border: 1px solid #d33682;
+  border-radius: 5px;
+  background: #d33682;
+ 
+  padding: 1px; 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+#focal_chip chip-tmpl:focus .default-chip.focal_chip {
+    border: 2px solid #9b225c;
+    background: #9b225c;
+    opacity: 1;
+    color: white; 
+}
 
 
 
@@ -161,19 +168,19 @@ a, a:hover, a:focus {
   height:40px;
   margin:0;
   z-index:10;
-  background-color: transparent;
+  background-color: white;
 }
 
 input[type="text"].form-control{
   -webkit-appearence:none;
-  -webkit-border-radius:30px;
+  -webkit-border-radius:10px;
   border-radius: Top-left, Top-right, Bottom-right, Bottom-left;
 }
 
 
 input[type=number]{
-    width: 3px;
-    color: green;
+    width: 1px;
+    color: black;
 } 
 
 .form-control-submit,
@@ -188,21 +195,23 @@ input[type=number]{
   text-align:center;
   cursor:pointer;
   line-height:40px;
-  background:pink;
-  border-radius: 20px;
+  background:transparent;
+  border-radius: 10px;
 
 }
 
 .form-control-submit{
-  background:blue; 
-  opacity: 0;
-  color:red;
-  /*border:none;*/
-  border: 2px solid #9e9e9e;
+  background:#424242; 
+  opacity: 0.8;
+  color:white;
+  border-radius: 0px 10px 10px 0px;
+  border:none;
+
   outline:none;
   z-index:-1;
 }
 .search-label{
+    color:#424242;
   z-index:90;
 }
 .form-group.sb-search-open,
@@ -212,8 +221,8 @@ input[type=number]{
 
 .form-group.sb-search-open .search-label,
 .no-js .sb-search .search-label {
-    
-    color: yellow;
+    padding-right: 10px;
+    color: #424242;
     left:0;
     top:0;
     z-index: 11;
@@ -240,20 +249,21 @@ input[type=number]{
 
 
 
-/*.navbar {
-    padding: 15px 10px;
-    background: transparent;
+.navbar {
+    padding: 0px 0px;
+/*    background: transparent;
     border: none;
     border-radius: 0;
     margin-bottom: 40px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);*/
 }
+
 
 .navbar-btn {
     box-shadow: none;
     outline: none !important;
     border: none;
-}*/
+}
 
 .line {
     width: 100%;
@@ -478,18 +488,6 @@ a.article, a.article:hover {
 
 
 
-/* search */
-
-.has-search .form-control-feedback {
-    right: initial;
-    left: 0;
-    color: #ccc;
-}
-
-.has-search .form-control {
-    padding-right: 12px;
-    padding-left: 34px;
-}
 
 
 /* go to top*/
@@ -535,5 +533,3 @@ a.article, a.article:hover {
     color: white;
     top: 5px;
 }
-
-

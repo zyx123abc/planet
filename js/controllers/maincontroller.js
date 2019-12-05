@@ -1,10 +1,95 @@
+app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_events', '$uibModal', '$log', '$document',
+    function($scope, $http, VisDataSet, ui_graph_api, ui_events, $uibModal, $log, $document) {
 
-app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_events',
-    function($scope, $http, VisDataSet, ui_graph_api, ui_events) {
-        $scope.search_res = null;
-        $scope.toggle_search = function() {
-            
-            console.log('!!!!!!!!!!!!!!!!!!!!!!toggle search works!', $scope.search_res);
+
+// $scope.toggled = function(open) {
+//     $log.log('Dropdown is now: ', open);
+//   };
+
+//   $scope.toggleDropdown = function($event) {
+//     $event.preventDefault();
+//     $event.stopPropagation();
+//     $scope.status.isopen = !$scope.status.isopen;
+//   };
+
+
+
+
+
+
+// modal
+var $ctrl = this;
+  $ctrl.items = ['item1', 'item2', 'item3'];
+
+  $ctrl.animationsEnabled = true;
+
+  $ctrl.open = function (size, parentSelector) {
+    var parentElem = parentSelector ? 
+      angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
+    var modalInstance = $uibModal.open({
+      animation: $ctrl.animationsEnabled,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      templateUrl: 'myModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      controllerAs: '$ctrl',
+      size: size,
+      appendTo: parentElem,
+      resolve: {
+        items: function () {
+          return $ctrl.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $ctrl.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  }; //open
+
+    $ctrl.toggleAnimation = function () {
+    $ctrl.animationsEnabled = !$ctrl.animationsEnabled;
+  };
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+        // $scope.addStyle = function ($event){
+        //     console.log("works!", $event)
+        //     // angular.element( document.querySelector( '#div1' )).addClass('alpha');
+        //     // $event.stopPropagation();  
+        // }
+        
+
+        // $scope.addStyle = function (event){
+        //     console.log("works!")
+        //     angular.element('.form-group').addClass("sb-search-open");
+        //     $event.stopPropagation();  
+        // }
+
+        // $scope.removeStyle = function (event){
+        //     if($(event.target).is("#search") === false && angular.element(".form-control").val().length == 0)
+        //     angular.element('.form-group').removeClass("sb-search-open");
+        //     // $event.stopPropagation();  
+        // }
+
+
+
+        $scope.toggle_search = function($event) {
+            var target = $event.target;
+            console.log('!!!!!!!!!!!!!!!!!!!!!!toggle search works!', traget);
             // if($scope.search_res !== null){
             //     console.log('??????')
 
@@ -19,8 +104,13 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
 
         }  
 
-        $scope.test_fun = function() {
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        $scope.chipremove = function(chip) {
+            // to do: remove node
+            console.log('remove focal entity: ', [chip]);
+            var endpoint = ui_graph_api.endpoints.removeNodes;
+            ui_graph_api.callAPI($scope.ctrlnetworks, endpoint,  { 'remove focal': [chip] });
+            
+
             return true;
         } 
 
@@ -29,48 +119,12 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
             
         } 
 
-    $scope.companies = ['Apple','Microsoft'];
-        /*for bootstrap.ui.typeahead example*/
-
-    $http.get("http://localhost:5000/api/GetNodeList")
-                .then(function(response) {
-                $scope.availableCompanies = response.data;
-                // console.log($scope.availableCompanies);
-            });
-    // $scope.availableCompanies = 
-
-    //     ['ACCO Brands',
-    //         'Accuquote',
-    //         'Accuride Corporation',
-    //         'Ace Hardware',
-    //         'Google',
-    //         'FaceBook',
-    //         'Paypal',
-    //         'Pramati',
-    //         'Bennigan',
-    //         'Berkshire Hathaway',
-    //         'Berry Plastics',
-    //         'Best Buy',
-    //         'Carlisle Companies',
-    //         'Carlson Companies',
-    //         'Carlyle Group',
-    //         'Denbury Resources',
-    //         'Denny',
-    //         'Dentsply',
-    //         'Ebonite International',
-    //         'EBSCO Industries',
-    //         'EchoStar',
-    //         'Gateway, Inc.',
-    //         'Gatorade',
-    //         'Home Shopping Network',
-    //         'Honeywell',
-    //     ];
+        $scope.focal_details = function() {
+            // console.log(typeof($scope.ctrlnetworks.controlParams.focal_items.full_list[1]))
+            console.log('yyy: ')
+        }
 
 
-
-    $scope.focusinControl = {'take':4};
-
-    $scope.entity_hobs =[1,2,3,4,5];
 
 
     $scope.input_search = {
@@ -78,29 +132,22 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
         "hops":1
     };
 
-    // $scope.ctrlnetworks.controlParams.focal_items
-
-
-
-
-
-
-
-
-
 
 
 
     $scope.networkViewInfo = {};
 
-    
+
     $scope.options = default_graph_options;
     
 
 
 
 
-    $scope.init = function() {
+
+
+
+    $scope.init_re_network = function() {
         console.log('----> init RE network')
         $scope.nodes = new vis.DataSet();
         $scope.edges = new vis.DataSet();
@@ -110,7 +157,10 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
             edges: $scope.edges
         };
 
+
+
         $scope.ctrlnetworks = null;
+        $scope.re_controlParams = re_controlParams;
 
         console.log('----> initializing ui events');
 
@@ -122,10 +172,18 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
         //     console.log('get entity lists: ', $scope.entity_id_list)
         // });
 
+        // TO DO: set these two into functions
+
+        $http.get("http://localhost:5000/api/GetNodeList")
+        .then(function(response) {
+            $scope.entity_id_list = response.data;
+        });
+
         // ui_events._setNetworkDrawingEvents($scope.ctrlnetworks);
+
     }
 
-    $scope.init();
+    $scope.init_re_network();
 
     //     console.log('----> initializing graph from session');
     //     console.log('network: ', $scope.ctrlnetworks)
@@ -137,20 +195,68 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
         // ui_graph_api.callAPI($scope.ctrlnetworks, endpoint)
 
 
-    $http.get("http://localhost:5000/api/GetNodeList")
-            .then(function(response) {
-                $scope.entity_id_list = response.data;
-            });
 
-    $scope.test = function() {
-        console.log($scope.ctrlnetworks.getSelectedNodes())
+
+// for ure_network:
+
+
+    $scope.ure_options = ure_network_options;
+
+
+
+    $scope.init_ure_network =  function() {
+        // initialize the vis.js entity network visualization
+        // create a dummy network for ui_graph_api api calls to populate
+
+        // networks.ure_network_container = document.getElementById('ure_network');
+        // networks.re_network_options = default_graph_options;
+        $scope.ure_network = null;
+        // $scope.ure_network_options = ure_network_options;
+
+        $scope.ure_network_nodes = new vis.DataSet([{id: 1, text: 'deep', date: '2013-06-23', group: 2}]);
+        $scope.ure_network_edges = new vis.DataSet([]);
+
+        $scope.ure_network_data = {
+            nodes: $scope.ure_network_nodes,
+            edges: $scope.ure_network_edges
+        };
+
+        console.log('Initializing new empty network vis for UR modal')
+        // networks.ure_network = new vis.Network(
+        //     networks.ure_network_container,
+        //     networks.ure_network_data,
+        //     networks.ure_network_options
+        // );
+
     }
 
-    $scope.InduceGraphWithHops = function(params) {
+    $scope.init_ure_network();
+
+
+
+    $scope.test = function() {
+        // console.log($scope.ctrlnetworks.getSelectedNodes())
+    }
+
+    $scope.search_res = null;
+    $scope.InduceGraphWithHops = function() {
+        console.log('induce: ', $scope.search_res.toString());
+        $scope.input_search.node_id_list = $scope.search_res.toString();
+
         var endpoint = ui_graph_api.endpoints.induceGraphWithHops;
-        ui_graph_api.callAPI($scope.ctrlnetworks, endpoint, params);
-      
+        ui_graph_api.callAPI($scope.ctrlnetworks, endpoint, $scope.input_search);
+        $scope.search_res = null;
     } 
+
+    $scope.removeNodes = function() {
+
+        console.log('----> removing graph nodes');
+        var endpoint = ui_graph_api.endpoints.removeNodes;
+        // nodeIDList = $scope.ctrlnetworks.getSelectedNodes();
+        console.log($scope.ctrlnetworks.getSelectedNodes())
+        ui_graph_api.callAPI($scope.ctrlnetworks, endpoint);
+
+        };
 
 
     $scope._getSessionData = function(network) {
@@ -165,130 +271,79 @@ app.controller('MainCtrl', ["$scope","$http", 'VisDataSet', 'ui_graph_api', 'ui_
         ui_graph_api.callAPI($scope.ctrlnetworks, endpoint);
     };  
 
-    $scope.removeNodes = function() {
-
-        console.log('----> removing graph nodes');
-        var endpoint = ui_graph_api.endpoints.removeNodes;
-        // nodeIDList = $scope.ctrlnetworks.getSelectedNodes();
-        console.log($scope.ctrlnetworks.getSelectedNodes())
+    $scope.contractGraph = function() {
+        console.log('----> contracting graph');
+        var endpoint = ui_graph_api.endpoints.contractGraph;
         ui_graph_api.callAPI($scope.ctrlnetworks, endpoint);
-
-        };
-
-     
-
-function _updateGraph(response_data) {
-        
-        // called after API response is successful
-        // sets response variables based on API response
-        // if response requires network refresh, calls draw_network function to do so
-        var responses = {};
-        responses.resp_boolUpdatedStatus = response_data.bool_update_status;
-        responses.resp_strFocalNodeIDList = response_data.str_focal_node_id_list;
-        responses.resp_intNumNodes = response_data.int_num_nodes;
-        responses.resp_intNumEdges = response_data.int_num_edges;
-        responses.resp_intNumComponents = response_data.int_num_components;
+    }; 
 
 
-        responses.resp_jsonGraph = response_data.json_graph;
-        responses.network_view_info = response_data.network_view_info;
+    $scope.Undo = function() {
 
-        if (responses.resp_boolUpdatedStatus == true) {
-            console.log('redrawing network');
-            drawNetwork(responses.resp_jsonGraph, responses.network_view_info);
+        console.log('----> undoing graph');
+        var endpoint = ui_graph_api.endpoints.undo;
+        ui_graph_api.callAPI($scope.ctrlnetworks, endpoint,  { 'action': 'undo' });
+    };
 
-        } else {
-            console.log('no need to redraw network');
-            $scope.controlParams.networkViewOptions = responses.network_view_info;
-        }
+    $scope.Redo = function() {
+
+        console.log('----> undoing graph');
+        var endpoint = ui_graph_api.endpoints.redo;
+        ui_graph_api.callAPI($scope.ctrlnetworks, endpoint, { 'action': 'redo' });
     };
 
 
-    function drawNetwork(jsonGraph, networkViewOptions) {
-        // update network object
-        // jsonGraph - jsonified networkx graph to display
-        // user_view_position - the current x,y position the user is on
-        // user_view_scale - the current scale (zoom) the user is on
 
-        var curr_scale = networkViewOptions.curr_scale
-        var curr_view_pos = networkViewOptions.curr_viewPos
-
-        $scope.nodes = new vis.DataSet(jsonGraph.nodes);
-
-        // console.log('nodes: ', $scope.nodes)
-
-        $scope.edges = _getEdges(jsonGraph.edges)
-
-
-        $scope.controlParams.jsonGraph = jsonGraph
-        $scope.controlParams.networkViewOptions = networkViewOptions
-        $scope.controlParams.allEdges = jsonGraph['edges']
-        $scope.controlParams.allNodes = jsonGraph['nodes']
-
-        $scope.data = { nodes: $scope.nodes, edges: $scope.edges };
+    $scope.community = false;
+    $scope.communityToggle = function() {
+        console.log("----> change community")
+        $scope.community = !$scope.community
+       
+        $scope.ctrlnetworks.controlParams.colorTheme = ($scope.community) ? "colTheme_community" : "colTheme_default"
         
-        // $scope.ctrlnetworks.setData($scope.data);
-        // network.moveTo({ position: curr_view_pos, scale: curr_scale });
-        // network.redraw();
-
-
-
+        ui_graph_api.drawNetwork(
+                $scope.ctrlnetworks.controlParams.jsonGraph,
+                $scope.ctrlnetworks, 
+                $scope.ctrlnetworks.controlParams.networkViewOptions
+        );
     };
+    // community ends
 
+    $scope.currencyToggle = function() {
+        console.log("----> change currency")
+        $scope.ctrlnetworks.controlParams.splitCurrencies = !$scope.ctrlnetworks.controlParams.splitCurrencies;
+        ui_graph_api.drawNetwork(
+                $scope.ctrlnetworks.controlParams.jsonGraph,
+                $scope.ctrlnetworks, 
+                $scope.ctrlnetworks.controlParams.networkViewOptions)
 
-    function _getEdges(allEdgeList) {
-        // select appropriate edges to display
-        // - splitCurrencies = true --> display edges aggregated by currenvy
-        // - splitCurrencies = false --> display total aggregated edges
+    }// currency ends
 
-        // TODO:
-        // minDate / maxData --> filter out transactions outside of date range
-        // to do this in UI, would need to loop individual transactions within aggregated edges
-        // and recreate aggregation - best to do this in API instead
-
-        // split edges into two separate arrays
-        // one containing 'all' currencies aggregated edges
-        // one containing individual currency aggregated edges
-        var e_all_curr = []
-        var e_split_curr = []
-        for (var edge of allEdgeList) {
-            if (edge.curr_cd == 'all') {
-                e_all_curr.push(edge)
-            } else {
-                e_split_curr.push(edge)
-            }
-        }
-        // pick appropriate edge array depending on splitCurrencies toggle setting
-        if ($scope.controlParams.splitCurrencies == true) {
-            var e = e_split_curr
-        } else {
-            var e = e_all_curr
-        }
-
-        return e
+    $scope.physicsToggle = function() {
+        console.log("----> change physics to:")
+        $scope.ctrlnetworks.physics.options.enabled = !$scope.ctrlnetworks.physics.options.enabled
+        var physicsoption = ($scope.ctrlnetworks.physics.options.enabled) ? true : false
+        $scope.ctrlnetworks.setOptions({ physics: physicsoption});
+        console.log(physicsoption)
+        // console.log($scope.options.physics)
+        console.log($scope.ctrlnetworks.physics.options)
     }
 
 
-
-
-
-
-
-
-
   
+    $scope.downloadGraph = function() {
+        console.log("----> downloading graph", ui_events);
+        ui_events._setUIControls_downloadModal($scope.ctrlnetworks.canvas.getContext());
+    }
 
 
-
+    // vis network event 
     $scope.events = {};
-
 
     $scope.events.click = function (params) {
 
-         // console.warn('Event "click" triggered');
+         console.warn('Event "click" triggered');
          // console.log.apply(console, arguments);
-
-
 
          var timer = 0;
          var delay = 200;
@@ -318,9 +373,21 @@ function _updateGraph(response_data) {
     };
     
 
-    $scope.events.doubleClick = function () {
-         // console.warn('Event "doubleClick" triggered');
+    $scope.events.doubleClick = function (params) {
+         console.warn('Event "doubleClick" triggered');
          // console.log.apply(console, arguments);
+         var timer = 0;
+         var delay = 200;
+         var prevent = false;
+
+         clearTimeout(timer);
+         prevent = true;
+         if (params.nodes.length >= 0) {
+            
+             params.event = "node double-clicked";
+             ui_events.ui_actions._nodeDoubleClickAction($scope.ctrlnetworks, params);
+         }
+
     };
     
     $scope.events.oncontext = function () {
@@ -747,37 +814,8 @@ $scope.events.beforeDrawing = function () {
 
 
 
-    // $scope.events.doubleClick = function (params) {
-    //      console.warn('Event "doubleClick" triggered');
-    //      console.log.apply(console, arguments);
 
-    //      nodeIDList = $scope.ctrlnetworks.getSelectedNodes();
-
-    //      var timer = 0;
-    //      var delay = 200;
-    //      var prevent = false;
-
-    //      clearTimeout(timer);
-    //         prevent = true;
-    //         if (params.nodes.length >= 0) {
-                
-    //             params.event = "node double-clicked";
-
-    //             ui_events.ui_actions._nodeDoubleClickAction($scope.networkViewInfo, nodeIDList, params)
-    //                .then(function(response) {
-                
-    //                     if ('focal_items' in response.data) {
-    //                         $scope.controlParams.focal_items = response.data['focal_items'];
-    //                         // console.log('controlParams: ', $scope.controlParams);
-    //                     }
-
-    //                     _updateGraph(response.data);
-
-    //                 });
-    //         }
-    // };
-
-
+    // back to top
     $(window).scroll(function() {
         if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
             $('#return-to-top').fadeIn(200);    // Fade in the arrow
@@ -800,3 +838,51 @@ $scope.events.beforeDrawing = function () {
 
     }
     ]);
+
+
+
+app.controller('ModalInstanceCtrl', function ($uibModalInstance, items) {
+  var $ctrl = this;
+  $ctrl.items = items;
+  $ctrl.selected = {
+    item: $ctrl.items[0]
+  };
+
+  $ctrl.ok = function () {
+    $uibModalInstance.close($ctrl.selected.item);
+  };
+
+  $ctrl.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
+
+// Please note that the close and dismiss bindings are from $uibModalInstance.
+
+// app.component('modalComponent', {
+//   templateUrl: 'myModalContent.html',
+//   bindings: {
+//     resolve: '<',
+//     close: '&',
+//     dismiss: '&'
+//   },
+//   controller: function () {
+//     var $ctrl = this;
+
+//     $ctrl.$onInit = function () {
+//       $ctrl.items = $ctrl.resolve.items;
+//       $ctrl.selected = {
+//         item: $ctrl.items[0]
+//       };
+//     };
+
+//     $ctrl.ok = function () {
+//       $ctrl.close({$value: $ctrl.selected.item});
+//     };
+
+//     $ctrl.cancel = function () {
+//       $ctrl.dismiss({$value: 'cancel'});
+//     };
+//   }
+// });
+

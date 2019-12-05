@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <title>angular-chip-using-bootstrap-ui-typeahead</title>
   <link rel="shortcut icon" href="">
-<link rel='stylesheet' href='https://cdn.rawgit.com/angular-ui/bootstrap-bower/master/ui-bootstrap-csp.css'>
-<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+
+<link rel='stylesheet' href='assets/ui-bootstrap-csp.css'>
+<link rel='stylesheet' href='assets/bootstrap-3.3.7-dist/css/bootstrap.min.css'>
+
+
 
     <!-- fontawesome -->
   <link rel="stylesheet" href="assets/fontawesome-free-5.9.0-web/css/all.css">
@@ -23,46 +26,29 @@
 
 
 </head>
-<body ng-controller="MainCtrl">
-<!-- partial:index.partial.html -->
+<body ng-controller="MainCtrl as $ctrl">
 
-
-<!--     <br> -->
-
-
-
-
-<!--         <chips ng-model="ctrlnetworks.controlParams.focal_items.full_list">
-            <chip-tmpl style="display: none;">
-                <div class="default-chip">
-                    {{chip}}
-                    <span class="glyphicon glyphicon-remove" remove-chip></span>
-                </div>
-            </chip-tmpl>
-            <input ng-model-control ng-model="typeaheadmodel"  uib-typeahead="entity for entity in entity_id_list | filter:$viewValue"></input>
-        </chips> -->
-        <!-- Printing controller value -->
-<!--         <div class="printvalue">
-            <b>Controller:</b>
-            <div> Focal Entities = {{ctrlnetworks.controlParams.focal_items.full_list}}</div>
-            <div>Companies = {{companies}}</div>
-        </div>
-
-        <chips ng-model="ctrlnetworks.controlParams.focal_items.full_list">
-            <chip-tmpl>
-                <div class="default-chip">
-                    {{chip}}
-                    <span class="glyphicon glyphicon-remove" remove-chip="test_fun()"></span>
-                </div>
-            </chip-tmpl> -->
-<!--             <input ng-model-control ng-model="typeaheadmodel" uib-typeahead="entity for entity in entity_id_list | filter:$viewValue"></input> -->
-        <!-- </chips>  -->
+    <!-- Split button -->
+<!--     <div class="btn-group" uib-dropdown>
+      <button id="split-button" type="button" class="btn btn-primary" ng-click="split_button_fun()">Action</button>
+      <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only">Split button!</span>
+      </button>
+      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+        <li role="menuitem"><a href="#" >Action</a></li>
+        <li role="menuitem"><a href="#">Another action</a></li>
+        <li role="menuitem"><a href="#">Something else here</a></li>
+        <li class="divider"></li>
+        <li role="menuitem"><a href="#">Separated link</a></li>
+      </ul>
+    </div> -->
 
 
 
  <div class="wrapper">
             <!-- Sidebar Holder -->
-            <nav id="sidebar">
+            <nav id="sidebar" data-ng-init="featureClass=false" data-ng-class="{'active': featureClass}" >
                 <div class="sidebar-header">
 
                         
@@ -83,10 +69,10 @@
                             <i class="fab fa-hubspot"></i>Network
                         </a>
                         <ul class="collapse list-unstyled" id="homeSubmenu">
+
                             <li><a href="#" ng-click="expandGraph()"><i class="fas fa-expand-arrows-alt"></i>Expand</a></li>
 
-                            <li><a href="#" ng-click="contractGraph()">
-                            <i class="fa fa-compress-arrows-alt"></i>Contract</a></li>
+                            <li><a href="#" ng-click="contractGraph()"><i class="fa fa-compress-arrows-alt"></i>Contract</a></li>
                             
 
                             <li><a href="#" ng-click="Undo()">
@@ -98,10 +84,12 @@
                             <i class="fa fa-redo-alt"></i>
                             Redo</a>
                             </li>
+
+                            <li><a href="#" ng-click="removeNodes()"><i class="fas fa-trash-alt"></i>Delete</a></li>
                         </ul>
                     </li>
 
-                    <li>
+<!--                     <li>
 
                         <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
                             <i class="fas fa-bullseye"></i>
@@ -117,7 +105,7 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li> -->
                     <li>
 
                         <a href="#viewSubmenu" data-toggle="collapse" aria-expanded="false">
@@ -127,7 +115,7 @@
                         <ul class="collapse list-unstyled" id="viewSubmenu">
                             <li><a href="#" ng-click="Rearrange()"><i class="fas fa-sync-alt"></i>Rearrange</a></li>
 
-                            <li><a href="#" ng-click="currencyToggle()"><i ng-class="controlParams.splitCurrencies ? 'fab fa-creative-commons-nc' : 'fas fa-dollar-sign'"></i>{{controlParams.splitCurrencies && 'HideCurr' || 'ShowCurr'}}</a></li>
+                            <li><a href="#" ng-click="currencyToggle()"><i ng-class="ctrlnetworks.controlParams.splitCurrencies ? 'fab fa-creative-commons-nc' : 'fas fa-dollar-sign'"></i>{{ctrlnetworks.controlParams.splitCurrencies && 'HideCurr' || 'ShowCurr'}}</a></li>
 
                             <li><a href="#" ng-click="communityToggle()">
                             <i ng-class="community ? 'fab fa-creative-commons-pd' : 'far fa-copyright'"></i>{{community && 'HideCom' || 'ShowCom'}}</a>
@@ -166,11 +154,12 @@
                     <div class="container-fluid">
 
                         <div class="navbar-header">
-
-
                    
                   <span>
-                      <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn" style="background-color: white"> <i class="glyphicon glyphicon-align-center" style="color: black"></i>
+                      <button  
+     data-ng-click="featureClass=!featureClass" 
+     
+      type="button" id="sidebarCollapse" class="btn btn-info navbar-btn" style="background-color: white"> <i class="glyphicon glyphicon-align-center" style="color: black"></i>
                       </button>
                   </span>
  
@@ -198,9 +187,9 @@
           <span class="sr-only">(current)</span>
           </a>
         </li>
+        <li><a href="#2" data-toggle="tab">View</a></li>
+        <li><a href="#3" data-toggle="tab">Node</a></li>
 
-        <li><a href="#2" data-toggle="tab">Node</a></li>
-         <li><a href="#3" data-toggle="tab">View</a></li>
 
 
 <!--         <li class="dropdown">
@@ -219,26 +208,55 @@
       </ul>
 
       <!-- search bar -->
-      <div class="navbar-right">
+      <div class="navbar-right" >
         
       <form class="form-inline" role="search" >
 
-        <div class="form-group pull-right" id="search" ng-click="toggle_search()">
+        <div class="form-group pull-right" id="search"  ng-click="ev = $event">
+          <!-- ng-click="addStyle($event)" ng-blur="removeStyle($event)" -->
+          <!-- ng-click="toggle_search()" -->
 
-        <chips ng-model="search_res">
+        <chips ng-model="search_res" class = "search_test" style="padding-right: 60px;padding-left: 30px;">
             <!-- ctrlnetworks.controlParams.focal_items.full_list -->
             
-            <chip-tmpl style="display: none;">
-                <div class="default-chip">
+            <chip-tmpl >
+              <!-- to do: style="display:none;" -->
+                <div class="default-chip" style="position:relative;z-index: 150;">
                     {{chip}}
                     <span class="glyphicon glyphicon-remove" remove-chip></span>
                 </div>
             </chip-tmpl>
             
-            <input ng-model-control ng-model="typeaheadmodel" uib-typeahead="entity for entity in entity_id_list | filter:$viewValue" type="text" class="form-control" placeholder="        Search..." autofocus></input>
+            <input ng-model-control ng-model="typeaheadmodel" uib-typeahead="entity for entity in entity_id_list | filter:$viewValue" type="text" class="form-control" placeholder="   Search..." style="padding-left: 25px" autofocus></input>
             
-            <!-- <button type="submit" class="form-control form-control-submit" ng-click="test_button()">Submit</button> -->
-            <button type="submit" class="form-control form-control-submit" ng-click="test_button()">Submit</button>
+
+<!--             <button type="submit" class="form-control form-control-submit" ng-click="InduceGraphWithHops()"><span style="padding-left: 8px; padding-right: 8px; padding-top: 0px;">Add</span>
+            </button> -->
+
+
+                <!-- Split button -->
+              <div class="btn-group form-control form-control-submit" uib-dropdown>
+
+                <button id="split-button" type="submit" class="btn btn-primary" ng-click="InduceGraphWithHops()" style="height: 40px">Action</button>
+                <button type="submit" class="btn btn-primary" uib-dropdown-toggle style="height: 40px">
+                  <span class="caret"></span>
+                  <span class="sr-only">Split button!</span>
+                </button>
+
+
+
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+
+                  <li role="menuitem"><a href="#">Hops </a>   <div class="form-control form-control-submit"><input type="number" id="number" value="1" min="1" max="5" style="width: 50px; height: 40px"></div></li>
+                  <li class="divider"></li>
+                  <li role="menuitem"><a href="#">By Transaction</a></li>
+                  <li role="menuitem"><a href="#">By Name</a></li>
+                  
+                </ul>
+              </div>
+
+          
+              <!-- search icon -->
             <span class="search-label"><i class="glyphicon glyphicon-search" ></i></span>
         </chips>
 
@@ -279,23 +297,24 @@
           <!--  id="3" -->
           <h3 style="color: white">Focal Entities</h3>
 
-            <chips ng-model="ctrlnetworks.controlParams.focal_items.full_list">
-                <chip-tmpl>
-                    <div class="default-chip">
+            <chips ng-model="ctrlnetworks.controlParams.focal_items.full_list" render="customizeRender(data)">
+                <chip-tmpl id="focal_chip" >
+                    <div class="default-chip" >
                         {{chip}}
-                        <span class="glyphicon glyphicon-remove" remove-chip="test_fun()"></span>
+                        <span class="glyphicon glyphicon-remove" remove-chip="chipremove(chip)"></span>
                     </div>
                 </chip-tmpl>
-<!--                 <input ng-model-control ng-model="typeaheadmodel" uib-typeahead="entity for entity in entity_id_list | filter:$viewValue"></input> -->
+
             </chips>
 
-            <div style="color: white">Search Entities = {{search_res}}</div>
+<!--             <div style="color: white">Focal Entities = {{ctrlnetworks.controlParams.focal_items.node_list}}</div> -->
+
 
         </div> 
 
 
 
-                    </div>  <!-- container-fluid -->
+      </div>  <!-- container-fluid -->
 
                 </nav>
 
@@ -304,12 +323,9 @@
 
 
 
-
-
-
                     <div class="row row-no-gutters" style="background-color:#212121">
                     <div class="col-sm-9">
-                            <vis-network data="data" options="options" events="events" control="networkViewInfo" outnetworks="ctrlnetworks" height="100%"></vis-network>
+                            <vis-network data="data" options="options" events="events" control="networkViewInfo" outnetworks="ctrlnetworks" ctrlparams="re_controlParams" height="100%"></vis-network>
 
 
                     </div>
@@ -321,7 +337,13 @@
                       <div class="line"></div>
                       <p>Label: {{info.label}}</p>
                       <p>Type: {{info.feature_list.type}}</p>
-                      <p>Type: {{info.feature_list.industry}}</p>
+                      <p>Industry: {{info.feature_list.industry}}</p>
+                      
+                      <div class="modal-demo">
+
+                        <button type="button" class="btn btn-default" ng-click="$ctrl.open()">Show Entity Details</button>
+                      </div>
+
                       </div>
 
 
@@ -334,6 +356,12 @@
                       <p>Label: {{value.base_curr_cd}</p>
                       <!-- <p>Type: {{info.feature_list.type}}</p> -->
                       <!-- <p>Type: {{info.feature_list.industry}}</p> -->
+
+                      <div class="modal-demo">
+
+                        <button type="button" class="btn btn-default" ng-click="$ctrl.open('lg')">Show Transaction Details</button>
+                      </div>
+
                       </div>
 
 
@@ -341,9 +369,14 @@
 
                   </div>
 
-                <h2>vis angular</h2>
+                <input ng-model="typeaheadmodel" uib-typeahead="entity for entity in entity_id_list | filter:$viewValue" type="text" placeholder="   Search..." style="padding-left: 25px" autofocus></input>
+
+
                 <p>vis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angularvis angular</p>
-                <p>{{input_search}}</p>
+                <p>{{ev.pageX}}</p>
+                <button class="btn btn-primary" ng-click="focal_details()">Expand</button>
+
+<!--                 <vis-network data="ure_network_data" options="ure_options" events="events"  outnetworks="ure_network" height="100%"></vis-network> -->
 
             </div>
 
@@ -354,7 +387,7 @@
  </div>
 
 
-
+  <a ng-click= "backToTop()" id="return-to-top"><i class="fas fa-angle-up"></i></a>
 
 
 
@@ -362,15 +395,18 @@
 
 
 <!-- partial -->
-<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.js'></script>
-<script src='https://cdn.rawgit.com/mohbasheer/angular-chips/master/dist/angular-chips.min.js'></script>
+<script src='assets/angularjs/angular.js'></script>
+<script src="assets/angularjs/angular-animate.js"></script>
+<script src="assets/angularjs/angular-sanitize.js"></script>
+
+<script src='assets/angular-chips.min.js'></script>
 
   <script src="assets/bootstrap-3.3.7-dist/js/jquery.min.js"></script>
 
   <script src="assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
-<script src='https://cdn.rawgit.com/angular-ui/bootstrap-bower/master/ui-bootstrap.js'></script>
-<script src='https://cdn.rawgit.com/angular-ui/bootstrap-bower/master/ui-bootstrap-tpls.js'></script>
+<script src='assets/ui-bootstrap.js'></script>
+<script src='assets/ui-bootstrap-tpls.js'></script>
 
   <script src="assets/axios/dist/axios.min.js"></script>
 
@@ -389,19 +425,13 @@
     <!-- Services -->
   <script src="js/services/ui_events.js"></script>
   <script src="js/services/ui_graph_api.js"></script>
-  <script src="js/services/ui_api_call.js"></script>
 
   <script src="js/ui_vis_options.js"></script>
 
   <script src="js/utils.js" type="text/javascript"></script>
 
-  <script type="text/javascript">
-             $(document).ready(function () {
-                 $('#sidebarCollapse').on('click', function () {
-                     $('#sidebar').toggleClass('active');
-                 });
-             });
-  </script>
+
+
 
     <script type="text/javascript">
     $(document).ready(function(){
@@ -426,6 +456,26 @@
     })
   })
   </script>
+
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Entity Details</h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <ul>
+            <li ng-repeat="item in $ctrl.items">
+                <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
+            </li>
+        </ul>
+        Selected: <b>{{ $ctrl.selected.item }}</b>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+    </div>
+</script>
+
 
 
 </body>
